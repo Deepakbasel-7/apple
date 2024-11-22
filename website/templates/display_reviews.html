@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}Customer Reviews{% endblock %}
+
+{% block body %}
+    <div class="reviews">
+        <h2>Customer Reviews</h2>
+        {% for review in reviews %}
+            <div class="review">
+                <p><strong>{{ review.name }}</strong></p>
+                <p><em>{{ review.email }}</em></p>
+                <p>{{ review.message }}</p>
+                <p><small>Submitted on: {{ review.date_submitted }}</small></p>
+                <hr>
+            </div>
+        {% else %}
+            <p>No reviews available yet.</p>
+        {% endfor %}
+    </div>
+{% endblock %}
