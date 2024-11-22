@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, flash, redirect, request, url_for, abort
 from .forms import LoginForm, SignUpForm, PasswordChangeForm
-from .models import Customer, ContactMessage, Wishlist, Product
+from .models import Customer, ContactMessage, Wishlist, Product, Category
 from . import db
 from flask_login import login_user, login_required, logout_user, current_user
 
@@ -129,10 +129,6 @@ def contact():
 from sqlalchemy.orm import joinedload
 
 
-
-
-
-
 @auth.route('/products')
 @login_required
 def products():
@@ -145,6 +141,13 @@ def products():
 @auth.route('/about')
 def about_us():
     return render_template('about_us.html')
+
+
+
+
+
+
+
 
 
 @auth.route('/wishlist')
@@ -211,4 +214,6 @@ def remove_from_wishlist(item_id):
     
     # Redirect back to the wishlist page
     return redirect(url_for('auth.wishlist'))
+
+
 

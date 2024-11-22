@@ -34,23 +34,37 @@ class Customer(db.Model, UserMixin ):
         return f'<Customer {self.id}>'
 
     
+
+class Category(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), unique=True, nullable=False)
+    products = db.relationship('Product', backref='category', lazy=True)  # Relationship to Product
+
+    def __repr__(self):
+        return f"<Category {self.name}>"
+
     
 class Product(db.Model):
-    id= db.Column(db.Integer, primary_key= True)
-    product_name= db.Column(db.String(100), nullable= False)
-    current_price= db.Column(db.Float, nullable= False)
-    previous_price= db.Column(db.Float, nullable= False)
-    in_stock= db.Column(db.Integer, nullable= False)
-    product_picture= db.Column(db.String(1000), nullable= False)
-    flash_sale= db.Column(db.Boolean, default= False)
-    date_added= db.Column(db.DateTime, default= datetime.utcnow)
-    
-    carts= db.relationship('Cart', backref= db.backref('product', lazy= True))
-    orders= db.relationship('Order', backref= db.backref('product', lazy= True))
-    
+    id = db.Column(db.Integer, primary_key=True)
+    product_name = db.Column(db.String(100), nullable=False)
+    current_price = db.Column(db.Float, nullable=False)
+    previous_price = db.Column(db.Float)
+    in_stock = db.Column(db.Integer)
+    product_picture = db.Column(db.String(255), nullable=True)
+    flash_sale = db.Column(db.Boolean, default=False)
+    date_added = db.Column(db.DateTime, default=datetime.utcnow)
+    category_id = db.Column(
+        db.Integer,
+        db.ForeignKey('category.id', name='fk_category_product'),
+        nullable=False,
+    ) # ForeignKey to Category
+
+    carts = db.relationship('Cart', backref=db.backref('product', lazy=True))
+    orders = db.relationship('Order', backref=db.backref('product', lazy=True))
     
     def __str__(self):
-     return '<Product %r>' % self.product_name
+        return '<Product %r>' % self.product_name
+
     
 class Cart(db.Model):
     id= db.Column(db.Integer, primary_key= True)

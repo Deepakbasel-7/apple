@@ -15,53 +15,52 @@ def get_image(filename):
     
 
 
-@admin.route('/add-shop-items', methods=['GET','POST'])
+@admin.route('/add-shop-items', methods=['GET', 'POST'])
 @login_required
 def add_shop_items():
     if current_user.id == 3:
-        form= ShopItemsForm()
+        form = ShopItemsForm()
+
         if form.validate_on_submit():
-            product_name= form.product_name.data
-            current_price= form.current_price.data
-            previous_price= form.previous_price.data
-            in_stock= form.in_stock.data
-            flash_sale=form.flash_sale.data
+            product_name = form.product_name.data
+            current_price = form.current_price.data
+            previous_price = form.previous_price.data
+            in_stock = form.in_stock.data
+            flash_sale = form.flash_sale.data
+            category_id = form.category_id.data  # Get the selected category ID
             
-            file= form.product_picture.data
-            
-            file_name= secure_filename(file.filename)
-            
-            file_path= f'./media/{file_name}'
-            
+            file = form.product_picture.data
+            file_name = secure_filename(file.filename)
+            file_path = f'./media/{file_name}'
             file.save(file_path)
-            
-            new_shop_item= Product()
-            new_shop_item.product_name =  product_name
+
+            new_shop_item = Product()
+            new_shop_item.product_name = product_name
             new_shop_item.current_price = current_price
             new_shop_item.previous_price = previous_price
             new_shop_item.in_stock = in_stock
             new_shop_item.flash_sale = flash_sale
-            
-            
             new_shop_item.product_picture = file_path
+            new_shop_item.category_id = category_id  # Assign the category_id here
             
             try:
                 db.session.add(new_shop_item)
                 db.session.commit()
-                flash(f'{product_name} added Successfully')
-                print('Product Added')
+                flash(f'{product_name} added successfully', 'success')
                 return render_template('add_shop_items.html', form=form)
             
             except Exception as e:
                 print(e)
-                flash('Item not added')
-        
-        
+                flash('Item not added due to an error.', 'danger')
+                return render_template('add_shop_items.html', form=form)
         
         return render_template('add_shop_items.html', form=form)
     
-    
     return render_template('404.html')
+
+
+
+
 
 
 @admin.route('/shop-items', methods= ['GET','POST'])

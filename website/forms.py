@@ -2,6 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField, FloatField, PasswordField, EmailField, BooleanField, SubmitField, SelectField
 from wtforms.validators import DataRequired, length, NumberRange
 from flask_wtf.file import FileField, FileRequired
+from .models import Category
 
 
 class SignUpForm(FlaskForm):
@@ -28,17 +29,23 @@ class PasswordChangeForm(FlaskForm):
     
     
 class ShopItemsForm(FlaskForm):
-    product_name= StringField('Name of Product', validators= [DataRequired()])
-    current_price= FloatField('Current Price', validators= [DataRequired()])
-    previous_price= FloatField('Previous Price', validators= [DataRequired()])
-    in_stock= IntegerField('In Stock', validators= [DataRequired()])
-    product_picture= FileField('Product Picture', validators=[FileRequired()])
-    flash_sale= BooleanField('Flash Sale')
-    
-    
-    add_product= SubmitField('Add Product')
-    update_product= SubmitField('Update')
-    
+    product_name = StringField('Name of Product', validators=[DataRequired()])
+    current_price = FloatField('Current Price', validators=[DataRequired()])
+    previous_price = FloatField('Previous Price', validators=[DataRequired()])
+    in_stock = IntegerField('In Stock', validators=[DataRequired(), NumberRange(min=0)])
+    product_picture = FileField('Product Picture', validators=[FileRequired()])
+    flash_sale = BooleanField('Flash Sale')
+    category_id = SelectField('Category', coerce=int, validators=[DataRequired()])
+
+    add_product = SubmitField('Add Product')
+    update_product = SubmitField('Update')
+
+    def __init__(self, *args, **kwargs):
+        super(ShopItemsForm, self).__init__(*args, **kwargs)
+        # Dynamically populate the categories
+        self.category_id.choices = [(category.id, category.name) for category in Category.query.all()]
+
+
     
     
 class OrderForm(FlaskForm):
@@ -47,3 +54,10 @@ class OrderForm(FlaskForm):
                                                        ('Canceled','Canceled')])
     
     update= SubmitField('Update Status')
+
+
+
+
+
+
+
