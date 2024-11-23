@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, flash, redirect, request, jsonify
-from .models import Product, Cart, Order
+from .models import Cart, Order, Category, Product
 from flask_login import login_required, current_user
 from . import db
 from intasend import APIService
@@ -16,8 +16,9 @@ API_TOKEN = 'ISSecretKey_test_c6f63b6f-06f6-441d-b5f0-dec432e2a0bd'
 def home():
 
     items = Product.query.filter_by(flash_sale=True)
+    category = Category.query.all()
 
-    return render_template('home.html', items=items, cart=Cart.query.filter_by(customer_link=current_user.id).all()
+    return render_template('home.html', items=items, categories=category, cart=Cart.query.filter_by(customer_link=current_user.id).all()
                            if current_user.is_authenticated else [])
 
 

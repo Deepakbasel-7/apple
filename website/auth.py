@@ -217,3 +217,13 @@ def remove_from_wishlist(item_id):
 
 
 
+@auth.route('/category/<int:category_id>', methods=['GET'])
+def filter_products_by_category(category_id):
+    # Fetch the category by its ID
+    category = Category.query.get_or_404(category_id)
+
+    # Get all products belonging to this category
+    products = Product.query.filter_by(category_id=category.id).all()
+
+    # Render the template with the filtered products
+    return render_template('filtered_products.html', category=category, products=products)

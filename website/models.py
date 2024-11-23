@@ -45,25 +45,25 @@ class Category(db.Model):
 
     
 class Product(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    product_name = db.Column(db.String(100), nullable=False)
-    current_price = db.Column(db.Float, nullable=False)
-    previous_price = db.Column(db.Float)
-    in_stock = db.Column(db.Integer)
-    product_picture = db.Column(db.String(255), nullable=True)
-    flash_sale = db.Column(db.Boolean, default=False)
-    date_added = db.Column(db.DateTime, default=datetime.utcnow)
-    category_id = db.Column(
-        db.Integer,
-        db.ForeignKey('category.id', name='fk_category_product'),
-        nullable=False,
-    ) # ForeignKey to Category
+        id = db.Column(db.Integer, primary_key=True)
+        product_name = db.Column(db.String(100), nullable=False)
+        current_price = db.Column(db.Float, nullable=False)
+        previous_price = db.Column(db.Float)
+        in_stock = db.Column(db.Integer)
+        product_picture = db.Column(db.String(255), nullable=True)
+        flash_sale = db.Column(db.Boolean, default=False)
+        date_added = db.Column(db.DateTime, default=datetime.utcnow)
+        category_id = db.Column(
+            db.Integer,
+            db.ForeignKey('category.id', name='fk_category_product'),
+            nullable=False,
+        ) # ForeignKey to Category
 
-    carts = db.relationship('Cart', backref=db.backref('product', lazy=True))
-    orders = db.relationship('Order', backref=db.backref('product', lazy=True))
-    
-    def __str__(self):
-        return '<Product %r>' % self.product_name
+        carts = db.relationship('Cart', backref=db.backref('product', lazy=True))
+        orders = db.relationship('Order', backref=db.backref('product', lazy=True))
+        
+        def __str__(self):
+            return '<Product %r>' % self.product_name
 
     
 class Cart(db.Model):
@@ -92,7 +92,7 @@ class Order(db.Model):
     
     
     customer_link= db.Column(db.Integer, db.ForeignKey('customer.id'), nullable=False)
-    product_link= db.Column(db.Integer, db.ForeignKey('product.id'), nullable= False)
+    product_link= db.Column(db.Integer, db.ForeignKey('product.id'), nullable= True)
     
     
     
