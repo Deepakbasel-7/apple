@@ -12,6 +12,16 @@ admin= Blueprint('admin', __name__)
 @admin.route('/media/<path:filename>')
 def get_image(filename):
     return send_from_directory('../media', filename)
+
+
+
+@admin.route('/admin-page', endpoint='admin_page_unique')
+@login_required
+def admin_page():
+    if current_user.id == 3:  # Admin check
+        return render_template('admin.html')
+    return render_template('404.html')
+
     
 
 

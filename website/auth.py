@@ -178,7 +178,7 @@ def add_to_wishlist(item_id):
         db.session.commit()
         flash(f"'{item.product_name}' added to your wishlist!", "success")
     
-    return redirect(url_for('products'))  # Redirect to products or previous page
+    return redirect(url_for('auth.wishlist'))  # Change 'auth.view_wishlist' to your wishlist view function name
 
 
 
